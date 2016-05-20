@@ -1,0 +1,53 @@
+<h3> <%= @show_event[:name] %>  </h3>
+<p>Host: <%= @show_event.user.first_name %> <%= @show_event.user.last_name %>  </p>
+<p>Date: <%= @show_event.date.strftime "%d/%m/%Y" %> </p>
+<p>Location: <%= @show_event.location %> </p>
+<p>Atendees: <%= @show_event.users_joined.count %></p>
+
+
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Location</th>
+		<th>State</th>
+	</tr>
+	<% @show_event.users_joined.each do |u| %>
+	<tr>
+		<td><%= u.first_name %> <%= u.last_name %></td>
+		<td><%= u.location %></td>
+		<td><%= u.state %></td>
+	</tr>
+	<% end %>
+</table>
+
+<h3> Discussion about this event: </h3>
+<div id="textlog">
+	
+	<% @comment.each do |c| %>
+		<p><%= c.content %></p>
+	<% end %>
+	
+
+
+
+</div>
+
+<form action="/comments" method="post">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<input type="hidden" name="comment[event_id]" value="<%= @show_event.id %>">
+	<p>
+		<label>Add a Comment:</label>
+		<textarea name="comment[content]"></textarea>	
+	</p>
+	<input type="submit" class="btn btn-primary" value="Submit">
+</form>
+
+
+<% if flash[:errors] %>
+  <% flash[:errors].each do |e| %>
+    <p><%= e %></p>
+  <% end %>
+<% end %>
+
+
+<button class="btn btn-primary"><a href="/events">Events Dashboard</a></button>
